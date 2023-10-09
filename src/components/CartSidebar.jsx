@@ -1,4 +1,4 @@
-const CartSidebar = ({ onCloseCart, cartItems = [] }) => {
+const CartSidebar = ({ onCloseCart, cartItems = [], onDeleteFromCart }) => {
    return (
       <div className="overlay">
          <div className="sidebar p-30 d-flex flex-column">
@@ -28,6 +28,7 @@ const CartSidebar = ({ onCloseCart, cartItems = [] }) => {
                         className="removeBtn"
                         src="img/btn-remove.svg"
                         alt="remove"
+                        onClick={() => onDeleteFromCart(item)}
                      />
                   </div>
                ))}
