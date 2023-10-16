@@ -10,23 +10,28 @@ function App() {
    const [sneakersItems, setSneakersItems] = useState([]);
    const [cartIsOpened, setCartIsOpened] = useState(false);
    const [cartItems, setCartItems] = useState([]);
+   const [favoriteItems, setFavoriteItems] = useState([]);
    const [filterValue, setFilterValue] = useState("");
 
    const onAddToCart = (itemData) => {
       axios.post("https://651ddfba44e393af2d5a651d.mockapi.io/cart", itemData);
 
       setCartItems((prev) => {
-         if (prev.find((item) => item.name === itemData.name)) {
-            return [...prev.filter((item) => item.name !== itemData.name)];
-         } else {
-            return [...prev, itemData];
-         }
+         return [...prev, itemData];
       });
    };
 
+   const onAddToFavorite = (itemData) => {
+      setFavoriteItems((prev) => [...prev, itemData]);
+   };
+
    const onDeleteFromCart = (itemData) => {
+      axios.delete(
+         `https://651ddfba44e393af2d5a651d.mockapi.io/cart/${itemData.id}`
+      );
+
       setCartItems((prev) => [
-         ...prev.filter((item) => item.name !== itemData.name),
+         ...prev.filter((item) => item.id !== itemData.id),
       ]);
    };
 
@@ -38,6 +43,9 @@ function App() {
       axios
          .get("https://651ddfba44e393af2d5a651d.mockapi.io/items")
          .then((res) => setSneakersItems(res.data));
+      axios
+         .get("https://651ddfba44e393af2d5a651d.mockapi.io/cart")
+         .then((res) => setCartItems(res.data));
    }, []);
 
    return (
@@ -80,16 +88,17 @@ function App() {
                   .filter((item) =>
                      item.name.toLowerCase().includes(filterValue.toLowerCase())
                   )
-                  .map(({ name, price, imgUrl }, index) => (
+                  .map(({ name, price, imgUrl, id }, index) => (
                      <Card
                         key={index}
+                        id={id}
                         name={name}
                         price={price}
                         imgUrl={imgUrl}
-                        onClickFavorite={() =>
-                           console.log("Добавили в избранное")
-                        }
                         onPlus={(itemData) => onAddToCart(itemData)}
+                        onAddToFavorite={(itemData) =>
+                           onAddToFavorite(itemData)
+                        }
                      />
                   ))}
             </div>
