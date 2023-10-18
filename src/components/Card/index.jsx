@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import styles from "./Card.module.scss";
 
-const Card = ({ name, price, imgUrl, id, onPlus, onAddToFavorite }) => {
+const Card = ({ name, price, imgUrl, id, onPlus, onAddToFavorite, favorited = false }) => {
    const [isAdded, setIsAdded] = useState(false);
-   const [isFavorite, setIsFavorite] = useState(false);
+   const [isFavorite, setIsFavorite] = useState(favorited);
 
    const onClickPlus = () => {
       onPlus({ name, price, imgUrl, id });
@@ -21,16 +21,14 @@ const Card = ({ name, price, imgUrl, id, onPlus, onAddToFavorite }) => {
          <div className={styles.favorite}>
             <img
                onClick={onClickFavorite}
-               src={
-                  isFavorite ? "/img/hear-liked.svg" : "/img/heart-unliked.svg"
-               }
-               alt="Unlike"
+               src={isFavorite ? "/img/hear-liked.svg" : "/img/heart-unliked.svg"}
+               alt='Unlike'
             />
          </div>
-         <img className="mb-15" width={133} height={112} src={imgUrl} alt="" />
-         <h5 className="mb-15">{name}</h5>
-         <div className="d-flex justify-between align-center">
-            <div className="d-flex flex-column">
+         <img className='mb-15' width={133} height={112} src={imgUrl} alt='' />
+         <h5 className='mb-15'>{name}</h5>
+         <div className='d-flex justify-between align-center'>
+            <div className='d-flex flex-column'>
                <span>Цена:</span>
                <b>{price} руб.</b>
             </div>
@@ -38,7 +36,7 @@ const Card = ({ name, price, imgUrl, id, onPlus, onAddToFavorite }) => {
                className={styles.plus}
                onClick={onClickPlus}
                src={isAdded ? "/img/btn-checked.svg" : "/img/btn-plus.svg"}
-               alt="add to cart"
+               alt='add to cart'
             />
          </div>
       </div>
