@@ -31,13 +31,20 @@ function App() {
    const [cartItems, setCartItems] = useState([]);
    const [favoriteItems, setFavoriteItems] = useState([]);
    const [filterValue, setFilterValue] = useState("");
+   const [isLoading, setIsLoading] = useState(true);
 
-   const onAddToCart = (itemData) => {
-      axios.post("https://651ddfba44e393af2d5a651d.mockapi.io/cart", itemData);
-
-      setCartItems((prev) => {
-         return [...prev, itemData];
-      });
+   const onAddToCart = async (itemData) => {
+      try {
+         if (cartItems.find((item) => Number(item.id) === Number(itemData.id))) {
+            await axios.delete(`https://651ddfba44e393af2d5a651d.mockapi.io/cart/${itemData.id}`);
+            setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(itemData.id)));
+         } else {
+            await axios.post("https://651ddfba44e393af2d5a651d.mockapi.io/cart", itemData);
+            setCartItems((prev) => [...prev, itemData]);
+         }
+      } catch (err) {
+         console.log(err);
+      }
    };
 
    const onAddToFavorite = (itemData) => {
@@ -48,10 +55,14 @@ function App() {
       }
    };
 
-   const onDeleteFromCart = (itemData) => {
-      axios.delete(`https://651ddfba44e393af2d5a651d.mockapi.io/cart/${itemData.id}`);
+   const onDeleteFromCart = async (itemData) => {
+      try {
+         await axios.delete(`https://651ddfba44e393af2d5a651d.mockapi.io/cart/${itemData.id}`);
 
-      setCartItems((prev) => [...prev.filter((item) => item.id !== itemData.id)]);
+         setCartItems((prev) => [...prev.filter((item) => item.id !== itemData.id)]);
+      } catch (err) {
+         console.log(err);
+      }
    };
 
    const onChangeFilterValue = (e) => {
@@ -59,13 +70,19 @@ function App() {
    };
 
    useEffect(() => {
-      axios
-         .get("https://651ddfba44e393af2d5a651d.mockapi.io/items")
-         .then((res) => setSneakersItems(res.data));
+      async function fetchData() {
+         setIsLoading(true);
 
-      axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/cart").then((res) => setCartItems(res.data));
+         const catrItemsResponse = await axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/cart");
+         const itemsRespons = await axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/items");
 
-      setFavoriteItems(favoritesData);
+         setCartItems(catrItemsResponse.data);
+         setSneakersItems(itemsRespons.data);
+         setFavoriteItems(favoritesData);
+         setIsLoading(false);
+      }
+
+      fetchData();
    }, []);
 
    return (
@@ -87,10 +104,12 @@ function App() {
                   <Home
                      sneakersItems={sneakersItems}
                      filterValue={filterValue}
+                     cartItems={cartItems}
                      onChangeFilterValue={onChangeFilterValue}
                      setFilterValue={setFilterValue}
                      onAddToCart={onAddToCart}
                      onAddToFavorite={onAddToFavorite}
+                     isLoading={isLoading}
                   />
                }
             />
