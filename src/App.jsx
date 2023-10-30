@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 
+import appStore from "./context";
+
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 
@@ -86,39 +88,38 @@ function App() {
    }, []);
 
    return (
-      <div className='wrapper clear'>
-         {cartIsOpened && (
-            <CartSidebar
-               onCloseCart={() => setCartIsOpened(false)}
-               cartItems={cartItems}
-               onDeleteFromCart={(itemData) => onDeleteFromCart(itemData)}
-            />
-         )}
+      <appStore.Provider value={{ sneakersItems, cartItems, favoriteItems }}>
+         <div className='wrapper clear'>
+            {cartIsOpened && (
+               <CartSidebar
+                  onCloseCart={() => setCartIsOpened(false)}
+                  cartItems={cartItems}
+                  onDeleteFromCart={(itemData) => onDeleteFromCart(itemData)}
+               />
+            )}
 
-         <Header onClickCart={() => setCartIsOpened(true)} />
+            <Header onClickCart={() => setCartIsOpened(true)} />
 
-         <Routes>
-            <Route
-               path='/'
-               element={
-                  <Home
-                     sneakersItems={sneakersItems}
-                     filterValue={filterValue}
-                     cartItems={cartItems}
-                     onChangeFilterValue={onChangeFilterValue}
-                     setFilterValue={setFilterValue}
-                     onAddToCart={onAddToCart}
-                     onAddToFavorite={onAddToFavorite}
-                     isLoading={isLoading}
-                  />
-               }
-            />
-            <Route
-               path='/favorites'
-               element={<Favorites favoriteItems={favoriteItems} onAddToFavorite={onAddToFavorite} />}
-            />
-         </Routes>
-      </div>
+            <Routes>
+               <Route
+                  path='/'
+                  element={
+                     <Home
+                        sneakersItems={sneakersItems}
+                        filterValue={filterValue}
+                        cartItems={cartItems}
+                        onChangeFilterValue={onChangeFilterValue}
+                        setFilterValue={setFilterValue}
+                        onAddToCart={onAddToCart}
+                        onAddToFavorite={onAddToFavorite}
+                        isLoading={isLoading}
+                     />
+                  }
+               />
+               <Route path='/favorites' element={<Favorites onAddToFavorite={onAddToFavorite} />} />
+            </Routes>
+         </div>
+      </appStore.Provider>
    );
 }
 

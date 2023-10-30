@@ -1,6 +1,12 @@
+import { useContext } from "react";
+
+import appStore from "../context";
+
 import Card from "../components/Card";
 
-const Favorites = ({ favoriteItems, onAddToFavorite }) => {
+const Favorites = ({ onAddToFavorite }) => {
+   const { favoriteItems } = useContext(appStore);
+
    return (
       <div className='content p-40 clear'>
          <div className='mb-40 d-flex align-center justify-between'>
