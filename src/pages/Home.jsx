@@ -3,7 +3,6 @@ import Card from "../components/Card";
 const Home = ({
    sneakersItems,
    filterValue,
-   cartItems,
    onChangeFilterValue,
    setFilterValue,
    onAddToCart,
@@ -21,7 +20,6 @@ const Home = ({
             {...item}
             onPlus={(itemData) => onAddToCart(itemData)}
             onAddToFavorite={(itemData) => onAddToFavorite(itemData)}
-            added={cartItems.some((obj) => Number(obj.id) === Number(item.id))}
             loading={isLoading}
          />
       ));

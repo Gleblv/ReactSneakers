@@ -4,8 +4,8 @@ import appStore from "../context";
 
 import Card from "../components/Card";
 
-const Favorites = ({ onAddToFavorite }) => {
-   const { favoriteItems } = useContext(appStore);
+const Favorites = () => {
+   const { favoriteItems, onAddToFavorite } = useContext(appStore);
 
    return (
       <div className='content p-40 clear'>

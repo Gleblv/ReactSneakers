@@ -34,6 +34,7 @@ function App() {
    const [favoriteItems, setFavoriteItems] = useState([]);
    const [filterValue, setFilterValue] = useState("");
    const [isLoading, setIsLoading] = useState(true);
+   const [orderId, setOrderId] = useState(0);
 
    const onAddToCart = async (itemData) => {
       try {
@@ -71,6 +72,10 @@ function App() {
       setFilterValue(e.target.value);
    };
 
+   const hasCartItem = (id) => {
+      return cartItems.some((item) => +item.id === +id);
+   };
+
    useEffect(() => {
       async function fetchData() {
          setIsLoading(true);
@@ -88,7 +93,20 @@ function App() {
    }, []);
 
    return (
-      <appStore.Provider value={{ sneakersItems, cartItems, favoriteItems }}>
+      <appStore.Provider
+         value={{
+            sneakersItems,
+            cartItems,
+            favoriteItems,
+            orderId,
+            cartItems,
+            hasCartItem,
+            onAddToFavorite,
+            setCartIsOpened,
+            setCartItems,
+            setOrderId,
+         }}
+      >
          <div className='wrapper clear'>
             {cartIsOpened && (
                <CartSidebar
@@ -116,7 +134,7 @@ function App() {
                      />
                   }
                />
-               <Route path='/favorites' element={<Favorites onAddToFavorite={onAddToFavorite} />} />
+               <Route path='/favorites' element={<Favorites />} />
             </Routes>
          </div>
       </appStore.Provider>
