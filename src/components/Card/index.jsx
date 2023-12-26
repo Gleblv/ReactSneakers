@@ -49,13 +49,15 @@ const Card = ({
             </ContentLoader>
          ) : (
             <>
-               <div className={styles.favorite}>
-                  <img
-                     onClick={onClickFavorite}
-                     src={isFavorite ? "/img/hear-liked.svg" : "/img/heart-unliked.svg"}
-                     alt='Unlike'
-                  />
-               </div>
+               {onAddToFavorite && (
+                  <div className={styles.favorite}>
+                     <img
+                        onClick={onClickFavorite}
+                        src={isFavorite ? "/img/hear-liked.svg" : "/img/heart-unliked.svg"}
+                        alt='Unlike'
+                     />
+                  </div>
+               )}
                <img className='mb-15' width={133} height={112} src={imgUrl} alt='' />
                <h5 className='mb-15'>{name}</h5>
                <div className='d-flex justify-between align-center'>
@@ -63,12 +65,14 @@ const Card = ({
                      <span>Цена:</span>
                      <b>{price} руб.</b>
                   </div>
-                  <img
-                     className={styles.plus}
-                     onClick={onClickPlus}
-                     src={hasCartItem(id) ? "/img/btn-checked.svg" : "/img/btn-plus.svg"}
-                     alt='add to cart'
-                  />
+                  {onPlus && (
+                     <img
+                        className={styles.plus}
+                        onClick={onClickPlus}
+                        src={hasCartItem(id) ? "/img/btn-checked.svg" : "/img/btn-plus.svg"}
+                        alt='add to cart'
+                     />
+                  )}
                </div>
             </>
          )}

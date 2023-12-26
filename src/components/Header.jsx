@@ -1,6 +1,13 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
+import appStore from "../context";
+
 const Header = ({ onClickCart }) => {
+   const { cartItems } = React.useContext(appStore);
+
+   const totalItemsPrice = cartItems.reduce((sum, obj) => sum + obj.price, 0);
+
    return (
       <header className='d-flex justify-between align-center p-40'>
          <Link to='/' className='headerLeft d-flex align-center cu-p'>
@@ -42,7 +49,7 @@ const Header = ({ onClickCart }) => {
                      stroke-linejoin='round'
                   />
                </svg>
-               <span>1205 руб.</span>
+               <span>{totalItemsPrice} руб.</span>
             </li>
             <Link to='/favorites' className='mr-30 cu-p'>
                <svg xmlns='http://www.w3.org/2000/svg' width='18' height='17' viewBox='0 0 18 17' fill='none'>
@@ -52,7 +59,7 @@ const Header = ({ onClickCart }) => {
                   />
                </svg>
             </Link>
-            <li>
+            <Link to='/orders'>
                <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'>
                   <path
                      fill-rule='evenodd'
@@ -61,7 +68,7 @@ const Header = ({ onClickCart }) => {
                      fill='#9B9B9B'
                   />
                </svg>
-            </li>
+            </Link>
          </ul>
       </header>
    );

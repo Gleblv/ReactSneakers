@@ -1,28 +1,32 @@
 import React from "react";
-import axios from "axios";
 
-import appStore from "../context";
+import appStore from "../../context";
 
-import Info from "./Info";
+import Info from "../Info";
 
-const CartSidebar = ({ onCloseCart, cartItems = [], onDeleteFromCart }) => {
+import styles from "./CartSidebar.module.scss";
+
+const CartSidebar = ({ onCloseCart, cartItems = [], onDeleteFromCart, isVisible }) => {
    const [isComplete, setIsComplete] = React.useState(false);
 
-   const { setCartItems, orderId, setOrderId } = React.useContext(appStore);
+   const { setCartItems, orderId, setOrderId, setOrderItems } = React.useContext(appStore);
+
+   const totalItemsPrice = cartItems.reduce((sum, obj) => sum + obj.price, 0);
 
    const onClickOrder = () => {
       try {
          setOrderId((prev) => prev + 1);
          setIsComplete(true);
          setCartItems([]);
+         setOrderItems((prev) => [...prev, ...cartItems]);
       } catch (error) {
          console.log(error);
       }
    };
 
    return (
-      <div className='overlay'>
-         <div className='sidebar p-30 d-flex flex-column'>
+      <div className={`${styles.overlay} ${isVisible ? styles.overlayActive : ""}`}>
+         <div className={`${styles.sidebar} p-30 d-flex flex-column`}>
             <h2 className='mb-30 d-flex align-center justify-between'>
                Корзина
                <img onClick={onCloseCart} className='removeBtn' src='img/btn-remove.svg' alt='remove' />
@@ -56,12 +60,12 @@ const CartSidebar = ({ onCloseCart, cartItems = [], onDeleteFromCart }) => {
                      <li className='d-flex align-center justify-between mb-20'>
                         <span>Итого: </span>
                         <div></div>
-                        <b>21 498 руб. </b>
+                        <b>{totalItemsPrice} руб. </b>
                      </li>
                      <li className='d-flex align-center justify-between mb-25'>
                         <span>Налог 5%: </span>
                         <div></div>
-                        <b>1074 руб. </b>
+                        <b>{totalItemsPrice * 0.05} руб. </b>
                      </li>
                      <button onClick={onClickOrder} className='greenButton'>
                         Оформить заказ

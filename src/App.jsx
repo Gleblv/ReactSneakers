@@ -8,8 +8,9 @@ import appStore from "./context";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 
-import CartSidebar from "./components/CartSidebar";
+import CartSidebar from "./components/CartSidebar/index";
 import Header from "./components/Header";
+import Orders from "./pages/Orders";
 
 const favoritesData = [
    {
@@ -29,11 +30,12 @@ const favoritesData = [
 
 function App() {
    const [sneakersItems, setSneakersItems] = useState([]);
-   const [cartIsOpened, setCartIsOpened] = useState(false);
    const [cartItems, setCartItems] = useState([]);
    const [favoriteItems, setFavoriteItems] = useState([]);
-   const [filterValue, setFilterValue] = useState("");
+   const [orderItems, setOrderItems] = useState([]);
+   const [cartIsOpened, setCartIsOpened] = useState(false);
    const [isLoading, setIsLoading] = useState(true);
+   const [filterValue, setFilterValue] = useState("");
    const [orderId, setOrderId] = useState(0);
 
    const onAddToCart = async (itemData) => {
@@ -99,22 +101,22 @@ function App() {
             cartItems,
             favoriteItems,
             orderId,
-            cartItems,
+            orderItems,
             hasCartItem,
             onAddToFavorite,
             setCartIsOpened,
             setCartItems,
+            setOrderItems,
             setOrderId,
          }}
       >
          <div className='wrapper clear'>
-            {cartIsOpened && (
-               <CartSidebar
-                  onCloseCart={() => setCartIsOpened(false)}
-                  cartItems={cartItems}
-                  onDeleteFromCart={(itemData) => onDeleteFromCart(itemData)}
-               />
-            )}
+            <CartSidebar
+               onCloseCart={() => setCartIsOpened(false)}
+               cartItems={cartItems}
+               onDeleteFromCart={(itemData) => onDeleteFromCart(itemData)}
+               isVisible={cartIsOpened}
+            />
 
             <Header onClickCart={() => setCartIsOpened(true)} />
 
@@ -135,6 +137,7 @@ function App() {
                   }
                />
                <Route path='/favorites' element={<Favorites />} />
+               <Route path='/orders' element={<Orders />} />
             </Routes>
          </div>
       </appStore.Provider>
