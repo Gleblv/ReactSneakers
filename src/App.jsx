@@ -82,8 +82,10 @@ function App() {
       async function fetchData() {
          setIsLoading(true);
 
-         const catrItemsResponse = await axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/cart");
-         const itemsRespons = await axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/items");
+         const [catrItemsResponse, itemsRespons] = await Promise.all([
+            axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/cart"),
+            axios.get("https://651ddfba44e393af2d5a651d.mockapi.io/items"),
+         ]);
 
          setCartItems(catrItemsResponse.data);
          setSneakersItems(itemsRespons.data);
